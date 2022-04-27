@@ -1,0 +1,20 @@
+#!/usr/bin/env bash
+
+source ./.env
+
+repo="es-7-daily"
+snap="$1"
+
+if [ -z "$snap" ]; then
+  echo "Usage: $0 <snapshot name>"
+  exit 1
+fi
+
+export node_ip=$(terraform output -raw "${contact_node}_internal_ip")
+# define index list because:
+#   "cannot restore index [.ds-ilm-history-5-2022.02.16-000002]
+#    because an open index with same name already exists in the cluster"
+curl -s -XPOST "http://$node_ip:9200/_snapshot/$repo/$snap/_restore" -d '
+{
+  "indices": "profile,device,anon-*,session-*,sessionevent-*,event-*,chatmessage-*"
+}' -H 'Content-Type: application/json'

@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+
+source ./.env
+
+node=$1
+terraform output -raw "$node"_ip
+echo ""
+terraform output -raw "$node"_internal_ip

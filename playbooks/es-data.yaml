@@ -1,0 +1,52 @@
+---
+- name: node
+  hosts: all
+  become: true
+
+  roles:
+    - name: elastic.elasticsearch
+
+  vars_prompt:
+    - name: node_name
+      default: node-1
+    - name: cluster_name
+      default: test
+    - name: network_host
+      default: 0.0.0.0
+    - name: seed
+      default: localhost:9300
+    - name: data_node
+      default: true
+    - name: master_node
+      default: false
+    - name: heap_size
+      default: 1g
+    - name: data_dir
+      default: /mnt/data
+    - name: http_port
+      default: 9200
+    - name: transport_port
+      default: 9300
+
+  vars:
+    es_version: 7.15.0
+    es_data_dirs:
+      - "{{ data_dir }}"
+    # es_log_dir: "/opt/elasticsearch/logs"
+    es_config:
+      node.name: "{{ node_name }}"
+      cluster.name: "{{ cluster_name }}"
+      network.host: "{{ network_host }}"
+      discovery.seed_hosts: "{{ seed }}"
+      http.port: "{{ http_port }}"
+      transport.port: "{{ transport_port }}"
+      node.data: "{{ data_node }}"
+      node.master: "{{ master_node }}"
+      bootstrap.memory_lock: true
+      reindex.remote.whitelist:
+        - external.host:9200
+      reindex.ssl.verification_mode: none
+    es_heap_size: "{{ heap_size }}"
+    es_plugins:
+      - plugin: repository-s3
+    # es_api_port: 9201

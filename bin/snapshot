@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+
+source ./.env
+
+export node_ip=$(terraform output -raw "${contact_node}_internal_ip")
+
+repo_name="es-7-daily"
+
+timestamp() {
+  # "T" must be lowercase as only allowed
+  # by es snapshot
+  date +"%Y-%m-%dt%H:%M:%S"
+}
+
+snap_name="$(timestamp)"
+curl -s -XPUT "http://$node_ip:9200/_snapshot/$repo_name/$snap_name" -H "Content-Type: application/json"

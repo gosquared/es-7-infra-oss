@@ -1,0 +1,43 @@
+#!/usr/bin/env bash
+
+# e.g:
+#   bin/replicas "sessionevent-*" 0
+
+source .env
+
+index="$1"
+replicas="$2"
+
+read -p "Set $index to $replicas replicas. Is this correct? y/n:" -n 1 -r response
+if [ "$response" != "y" ]
+then
+  echo
+  echo "Aborting..."
+  exit 1
+fi
+
+echo
+echo
+echo "Current settings:"
+
+./bin/ssh "$contact_node" curl -s -XGET "localhost:9200/$index/_settings?pretty"
+
+echo
+read -p "Will set $index replicas to $replicas. Proceed? y/n:" -n 1 -r response
+if [ "$response" != "y" ]
+then
+  echo
+  echo "Aborting..."
+  exit 1
+fi
+
+cmd="curl -s -XPUT 'localhost:9200/$index/_settings?pretty' -d '{
+  \"index\": {
+    \"number_of_replicas\": $replicas
+  }
+}' -H 'Content-Type: application/json'"
+
+echo
+echo $cmd;
+
+./bin/ssh "$contact_node" "$cmd"

@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+
+source .env
+
+set -u
+
+id1="$1"
+id2="$2"
+
+cp "node-$id1.tf" "node-$id2.tf"
+sed -i "s/node_$id1/node_$id2/g" "node-$id2.tf"
+sed -i "s/node-$id1/node-$id2/g" "node-$id2.tf"
+cp "bin/node-$id1" "bin/node-$id2"
+sed -i "s/node_$id1/node_$id2/g" "bin/node-$id2"
+sed -i "s/node-$id1/node-$id2/g" "bin/node-$id2"

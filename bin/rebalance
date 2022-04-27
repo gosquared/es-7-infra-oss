@@ -1,0 +1,20 @@
+#!/usr/bin/env bash
+
+source .env
+
+set -u
+
+# https://www.elastic.co/guide/en/elasticsearch/reference/7.16/modules-cluster.html
+
+./bin/ssh "$contact_node" "
+curl -s -XPUT 'localhost:9200/_cluster/settings/?pretty' -d '
+{
+  \"persistent\": {
+    \"cluster.routing.allocation.enable\": \"all\",
+    \"cluster.routing.rebalance.enable\": \"all\",
+    \"cluster.routing.allocation.allow_rebalance\": \"always\",
+    \"cluster.routing.allocation.cluster_concurrent_rebalance\": \"$1\",
+    \"cluster.routing.allocation.node_concurrent_recoveries\": \"$1\"
+  }
+}' -H \"Content-Type: application/json\"
+"

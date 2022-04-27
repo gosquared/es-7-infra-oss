@@ -1,0 +1,17 @@
+#!/usr/bin/env bash
+
+source ./.env
+
+export node_ip=$(terraform output -raw "${contact_node}_internal_ip")
+
+bucket="gs-es-7-backups"
+repo_name="es-7-daily"
+curl -s -XPUT "http://$node_ip:9200/_snapshot/$repo_name" -d "
+{
+  \"type\": \"s3\",
+  \"settings\": {
+    \"bucket\": \"$bucket\",
+		\"base_path\": \"daily\",
+		\"server_side_encryption\": true
+  }
+}" -H "Content-Type: application/json"

@@ -1,0 +1,25 @@
+#!/usr/bin/env bash
+
+# bin/start node_1
+
+set -e
+set -x
+
+source ./.env
+
+export instance_id=$(terraform output -raw $1_instance_id)
+
+aws --region us-east-1 ec2 start-instances \
+  --instance-ids "$instance_id"
+
+sleep 5
+
+terraform refresh \
+-var "name=$stack_name" \
+-var "instance_type=$instance_type" \
+-var "ami=$ami_id" \
+-var "vpc_id=$vpc_id" \
+-var "subnet=$subnet_id" \
+-var "kms_key_arn=$kms_key"
+
+bin/playbook up $1

@@ -1,0 +1,2 @@
+#!/usr/bin/env bash
+./bin/ssh node_1 curl -s -XGET 'localhost:9200/_cat/indices?v'

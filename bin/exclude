@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+
+source .env
+export node_id="$1"
+
+./bin/ssh "$contact_node" "
+curl -s -XPUT 'localhost:9200/_cluster/settings/?pretty' -d '{
+  \"persistent\": {
+    \"cluster.routing.allocation.exclude._id\": \"$node_id\"
+  }
+}' -H \"Content-Type: application/json\""

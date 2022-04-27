@@ -1,0 +1,17 @@
+#!/usr/bin/env bash
+
+source ./.env
+
+export node_ip=$(terraform output -raw "${contact_node}_internal_ip")
+result=$(curl -s -XGET "http://$node_ip:9200/_snapshot/_status?pretty")
+
+total=$(echo "$result" | jq '.snapshots[].stats.total.size_in_bytes')
+processed=$(echo "$result" | jq '.snapshots[].stats.processed.size_in_bytes')
+incremental=$(echo "$result" | jq '.snapshots[].stats.incremental.size_in_bytes')
+name=$(echo "$result" | jq '.snapshots[].snapshot')
+
+percent=$(echo "scale=2; $processed / $incremental * 100" | bc)
+echo "$name"
+echo "$percent% complete"
+echo "size: $(( $incremental / 1024 / 1024 / 1024 ))g"
+echo "total: $(( $total / 1024 / 1024 / 1024 ))g"

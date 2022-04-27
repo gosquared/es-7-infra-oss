@@ -1,0 +1,14 @@
+#!/usr/bin/env bash
+
+source ./.env
+
+repo="es-7-daily"
+snap="$1"
+
+if [ -z "$snap" ]; then
+  echo "Usage: $0 <snapshot name>"
+  exit 1
+fi
+
+export node_ip=$(terraform output -raw "${contact_node}_internal_ip")
+curl -s -XDELETE "http://$node_ip:9200/_snapshot/$repo/$snap"

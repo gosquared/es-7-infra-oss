@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+
+source ./.env
+
+if [ ! -z "$1" ]
+then
+  contact_node="$1"
+fi
+
+export ip=$(terraform output -raw "$contact_node"_ip)
+ssh -t "$user"@$ip "sudo less /var/log/elasticsearch/es-7-1.log"

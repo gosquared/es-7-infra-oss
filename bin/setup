@@ -1,0 +1,20 @@
+#!/usr/bin/env bash
+
+set -e
+
+python3 -m venv .venv
+source .venv/bin/activate
+
+pip3 install wheel
+pip3 install setuptools-rust
+pip3 install "ansible==4.*"
+pip3 install "ansible-lint[yamllint]"
+pip3 install six # https://github.com/elastic/ansible-elasticsearch/blob/5fcca57d34088ddbee9e013de3a9ff0c4476cfcf/filter_plugins/custom.py#L5
+pip3 install jmespath # https://github.com/elastic/ansible-elasticsearch/blob/ff5f1b3ad1e39c519477a2ae944f48c8e141661a/README.md?plain=1#L74
+
+ansible-galaxy collection install community.general
+ansible-galaxy install elastic.elasticsearch,v7.15.0
+
+[ ! -f .env ] && cp .env.example .env
+
+terraform init

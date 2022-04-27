@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+
+source ./.env
+
+repo="es-7-daily"
+export node_ip=$(terraform output -raw "${contact_node}_internal_ip")
+result=$(curl -s -XGET "http://$node_ip:9200/_snapshot/$repo/_all?pretty")
+
+echo "$result" | jq '.snapshots[] | "\(.snapshot) \(.state)"'

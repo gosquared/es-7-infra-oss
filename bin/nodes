@@ -1,0 +1,20 @@
+#!/usr/bin/env bash
+
+source .env
+
+# https://www.elastic.co/guide/en/elasticsearch/reference/7.15/cat-nodes.html
+cols="id"
+cols="$cols,ip"
+cols="$cols,hp" # heap.percent
+# cols="$cols,load_1m"
+cols="$cols,load_5m"
+# cols="$cols,load_15m"
+# cols="$cols,node.role"
+cols="$cols,m" # master
+cols="$cols,name"
+cols="$cols,dup" # disk.used_percent
+# cols="$cols,disk.used"
+# cols="$cols,disk.total"
+cols="$cols,sc" # segments.count
+cols="$cols,r" # node.role
+./bin/ssh "$contact_node" "curl -s -XGET 'localhost:9200/_cat/nodes?v&h=$cols&full_id'"

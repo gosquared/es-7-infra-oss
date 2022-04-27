@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+
+source .env
+
+export nodes="$1"
+./bin/ssh "$contact_node" curl -s -XGET "localhost:9200/_nodes/$nodes/stats?pretty" | jq .

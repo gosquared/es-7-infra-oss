@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+
+source ./.env
+
+export node_1_ip=$(terraform output -raw "node_1_ip")
+export node_2_ip=$(terraform output -raw "node_2_ip")
+export node_3_ip=$(terraform output -raw "node_3_ip")
+export node_4_ip=$(terraform output -raw "node_4_ip")
+
+pssh --print --timeout 0 -x "-i ./key" \
+  -H "$user@$node_1_ip" \
+  -H "$user@$node_2_ip" \
+  -H "$user@$node_3_ip" \
+  -H "$user@$node_4_ip" \
+  "sudo tail -f /var/log/elasticsearch/es-7-1.log"

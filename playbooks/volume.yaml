@@ -1,0 +1,22 @@
+---
+- name: volume
+  hosts: all
+  become: true
+
+  vars:
+    mount_path: /mnt/data
+    device: /dev/nvme1n1
+    fstype: ext4
+
+  tasks:
+    - name: format {{ device }} as {{ fstype }}
+      filesystem:
+        fstype: "{{ fstype }}"
+        device: "{{ device }}"
+
+    - name: mount {{ device }} to {{ mount_path }}
+      mount:
+        path: "{{ mount_path }}"
+        src: "{{ device }}"
+        state: mounted
+        fstype: "{{ fstype }}"

@@ -1,0 +1,31 @@
+#!/usr/bin/env bash
+
+source .venv/bin/activate
+source .env
+export ip=$(terraform output -raw node_11_ip)
+export contact_node_ip=$(terraform output -raw ${contact_node}_internal_ip)
+
+bin/playbook node_11 authorised-keys --private-key "$(pwd)/key"
+bin/playbook node_11 volume
+
+bin/playbook node_11 es-data \
+  --extra-vars \
+    "node_name=node-11" \
+  --extra-vars \
+    "cluster_name=es-7-1" \
+  --extra-vars \
+    "seed=$contact_node_ip:9300" \
+  --extra-vars \
+    "network_host=0.0.0.0" \
+  --extra-vars \
+    "http_port=9200" \
+  --extra-vars \
+    "transport_port=9300" \
+  --extra-vars \
+    "data_node=true" \
+  --extra-vars \
+    "master_node=false" \
+  --extra-vars \
+    "heap_size=8g" \
+  --extra-vars \
+    "data_dir=/mnt/data"

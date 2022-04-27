@@ -1,0 +1,16 @@
+---
+- name: expand volume
+  hosts: all
+  become: true
+
+  vars:
+    mount_path: /mnt/data
+    device: /dev/nvme1n1
+    fstype: ext4
+
+  tasks:
+    - name: expand {{ device }}
+      filesystem:
+        fstype: "{{ fstype }}"
+        device: "{{ device }}"
+        resizefs: true

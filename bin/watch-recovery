@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+
+source ./.env
+
+bin/ssh "$contact_node" -t "watch -n1 \"curl -s -XGET 'localhost:9200/_cat/recovery?pretty' | grep -v ' done ' | sort\""

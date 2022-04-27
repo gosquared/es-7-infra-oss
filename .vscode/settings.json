@@ -1,0 +1,5 @@
+{
+  "ansible.ansible.path": ".venv/bin/ansible",
+  "ansible.ansibleLint.path": ".venv/bin/ansible-lint",
+  "ansible.python.interpreterPath": ".venv/bin/python3.9"
+}

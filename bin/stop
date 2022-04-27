@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+
+# bin/stop node_1
+
+set -e
+set -x
+
+source ./.env
+
+export instance_id=$(terraform output -raw $1_instance_id)
+
+bin/ssh $1 "sudo systemctl stop elasticsearch"
+
+aws --region us-east-1 ec2 stop-instances \
+  --instance-ids "$instance_id"

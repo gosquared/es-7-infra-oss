@@ -1,0 +1,17 @@
+#!/usr/bin/env bash
+
+source .venv/bin/activate
+source ./.env
+
+export $target
+# e.g. aws_instance.node_4
+target=$1
+
+terraform destroy \
+-var "name=$stack_name" \
+-var "instance_type=$instance_type" \
+-var "ami=$ami_id" \
+-var "vpc_id=$vpc_id" \
+-var "subnet=$subnet_id" \
+-var "kms_key_arn=$kms_key" \
+-target "$target"

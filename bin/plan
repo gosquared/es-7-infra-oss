@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+
+source .venv/bin/activate
+source ./.env
+
+terraform plan \
+-var "name=$stack_name" \
+-var "instance_type=$instance_type" \
+-var "ami=$ami_id" \
+-var "vpc_id=$vpc_id" \
+-var "subnet=$subnet_id" \
+-var "kms_key_arn=$kms_key"

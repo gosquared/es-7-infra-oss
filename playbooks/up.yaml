@@ -1,0 +1,8 @@
+---
+- name: up
+  hosts: all
+  gather_facts: false
+
+  tasks:
+    - name: wait for host
+      wait_for_connection:

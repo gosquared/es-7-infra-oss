@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+
+source ./.env
+
+node=$1
+export ip=$(terraform output -raw "$node"_ip)
+ssh -t -i ./key "$user"@$ip "sudo systemctl restart elasticsearch"

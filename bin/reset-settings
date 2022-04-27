@@ -1,0 +1,18 @@
+#!/usr/bin/env bash
+
+source .env
+
+set -u
+
+./bin/ssh "$contact_node" "
+curl -s -XPUT 'localhost:9200/_cluster/settings/?pretty' -d '
+{
+  \"persistent\": {
+    \"cluster.routing.allocation.enable\": null,
+    \"cluster.routing.rebalance.enable\": null,
+    \"cluster.routing.allocation.allow_rebalance\": null,
+    \"cluster.routing.allocation.cluster_concurrent_rebalance\": null,
+    \"cluster.routing.allocation.node_concurrent_recoveries\": null
+  }
+}' -H \"Content-Type: application/json\"
+"

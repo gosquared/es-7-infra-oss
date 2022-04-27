@@ -1,0 +1,19 @@
+#!/usr/bin/env bash
+
+set -e
+
+source .venv/bin/activate
+source ./.env
+
+playbook="$2"
+node="$1"
+
+shift 2
+
+export ip=$(terraform output -raw "$node"_ip)
+
+ansible-playbook \
+  -i "$ip," \
+  -u "$user" \
+  $@ \
+  "playbooks/$playbook.yaml"

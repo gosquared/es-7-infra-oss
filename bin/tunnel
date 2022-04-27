@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+
+source .env
+
+set -x
+
+export ip=$(terraform output -raw "$contact_node"_ip)
+local_port=9451
+ssh -L "$local_port:localhost:9200" -C -N -l "$user" "$ip"

@@ -1,0 +1,13 @@
+#!/usr/bin/env bash
+
+source .env
+
+index=$1
+threshold=$2
+
+set -x
+
+bin/ssh "$contact_node" "curl -s -XPUT \"localhost:9200/$index/_settings?pretty\" -d '
+{
+  \"index.search.slowlog.threshold.query.warn\": \"$threshold\"
+}' -H 'Content-Type: application/json'"

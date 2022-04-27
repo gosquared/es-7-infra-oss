@@ -1,0 +1,13 @@
+#!/usr/bin/env bash
+source .env
+
+export ip=$(terraform output -raw ${contact_node}_ip)
+export ES_HOST="http://localhost:9451"
+
+echo "starting kibana..."
+docker-compose up -d kibana
+
+echo "waiting for boot..."
+sleep 15
+
+echo "forward port 5601 and open kibana at: http://localhost:5601/app/dev_tools#/console"

@@ -5,5 +5,10 @@ source .env
 set -x
 
 export ip=$(terraform output -raw "$contact_node"_ip)
-local_port=9451
+export local_port="$PORT"
+
+if [ -z "$PORT" ]; then
+  export local_port=9451
+fi
+
 ssh -L "$local_port:localhost:9200" -C -N -l "$user" "$ip"

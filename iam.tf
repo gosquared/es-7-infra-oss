@@ -44,5 +44,5 @@ resource "aws_iam_role" "role" {
 }
 
 variable "bucket" {
-  type = String
+  type = string
 }
